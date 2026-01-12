@@ -2,17 +2,25 @@ import express from 'express';
 import cors from 'cors';
 import { Resend } from 'resend';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config({ path: '.env.local' });
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 // Initialize Resend with the API key
 const resend = new Resend(process.env.RESEND_API_KEY || 're_Bp3P7wiT_LrfBvfH11wGQoHq8QGfhHbkL');
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the build directory
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.post('/api/waitlist', async (req, res) => {
   const { email, type } = req.body;
@@ -47,6 +55,11 @@ app.post('/api/waitlist', async (req, res) => {
     console.error('Server Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(port, () => {

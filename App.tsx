@@ -69,7 +69,7 @@ const WaitlistForm = ({ title, type, onComplete }: { title: string, type: 'maste
     setLoading(true);
     
     try {
-      const response = await fetch('http://localhost:3001/api/waitlist', {
+      const response = await fetch('/api/waitlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
