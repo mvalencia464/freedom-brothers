@@ -1,0 +1,18 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+
+# Redirect API calls to the serverless function
+[[redirects]]
+  from = "/api/waitlist"
+  to = "/.netlify/functions/waitlist"
+  status = 200
+
+# Handle React Router (SPA) - Catch-all redirect
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
